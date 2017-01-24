@@ -15,6 +15,7 @@ $positions = $data['positions'];
 $counterpartyId = $data['counterparty_id'];
 $organizationId = $data['organization_id'];
 
+
 $newCustomerOrder = [
     'name' => (string)time(),
     'organization' => [
@@ -34,23 +35,10 @@ $newCustomerOrder = [
 ];
 
 $apiSettings = getApiSettings();
-$curl = setupCurl($apiSettings);
-
-$curl = setCurlRequest(
-    $curl,
-    $apiSettings[MOYSKLAD_API_URL] . $apiSettings[MOYSKLAD_ADD_CUSTOMER_ORDER],
-    $apiSettings[MOYSKLAD_ADD_CUSTOMER_ORDER_METHOD]
-);
 
 $orderPostData = json_encode($newCustomerOrder);
+$customerOrderId = createCustomerOrder($apiSettings, $orderPostData);
 
-curl_setopt($curl, CURLOPT_POSTFIELDS, $orderPostData);
-curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-    'Content-Type: application/json',
-    'Content-Length: ' . strlen($orderPostData))
-);
-
-$customerOrderId = createCustomerOrder($curl);
 
 $orderPositions = array();
 $isPositionArray = is_array($positions);
@@ -83,27 +71,7 @@ $jsonResponse = 'empty';
 $isContainPosition = (count($orderPositions) > 0);
 if ($isContainPosition) {
     $jsonOrderPositions = json_encode($orderPositions);
-
-    $curl = setupCurl($apiSettings);
-
-    $curl = setCurlRequest(
-        $curl,
-        $apiSettings[MOYSKLAD_API_URL]
-            . $apiSettings[MOYSKLAD_ADD_ORDER_POSITION_PREFIX]
-            . $customerOrderId
-            . $apiSettings[MOYSKLAD_ADD_ORDER_POSITION_SUFFIX],
-        $apiSettings[MOYSKLAD_ADD_ORDER_POSITION_METHOD]
-    );
-
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $jsonOrderPositions);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-        'Content-Type: application/json',
-        'Content-Length: ' . strlen($jsonOrderPositions))
-    );
-
-    $jsonResponse = createCustomerOrderPosition($curl);
+    $jsonResponse = createCustomerOrderPosition($apiSettings, $customerOrderId, $jsonOrderPositions);
 }
 
 var_export($jsonResponse);
-
-

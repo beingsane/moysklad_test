@@ -25,72 +25,131 @@ function setupCurl($apiSettings)
     return $curl;
 }
 
-function getJuridicalPersonList($curlObject)
+function getJuridicalPersonList($apiSettings)
 {
-    $response = curlExec($curlObject);
+    $curl = setupCurl($apiSettings);
+
+    $curl = setCurlRequest(
+        $curl,
+        $apiSettings[MOYSKLAD_API_URL] . $apiSettings[MOYSKLAD_GET_JURIDICAL_PERSON],
+        $apiSettings[MOYSKLAD_GET_JURIDICAL_PERSON_METHOD]
+    );
+
+    $response = curlExec($curl);
     $data = json_decode($response, true);
     $result = $data['rows'];
     return $result;
 }
 
-function curlExec($curlObject)
+function curlExec($curl)
 {
-    $response = curl_exec($curlObject);
+    $response = curl_exec($curl);
 
-    $curlErrorNumber = curl_errno($curlObject);
+    $curlErrorNumber = curl_errno($curl);
     if ($curlErrorNumber) {
-        throw new Exception(curl_error($curlObject));
+        throw new Exception(curl_error($curl));
     }
 
     return $response;
 }
 
-function getCounterpartyList($curlObject)
+function getCounterpartyList($apiSettings)
 {
-    $response = curlExec($curlObject);
+    $curl = setupCurl($apiSettings);
+
+    $curl = setCurlRequest(
+        $curl,
+        $apiSettings[MOYSKLAD_API_URL] . $apiSettings[MOYSKLAD_GET_COUNTERPARTY],
+        MOYSKLAD_GET_COUNTERPARTY_METHOD
+    );
+
+    $response = curlExec($curl);
     $data = json_decode($response, true);
     $result = $data['rows'];
     return $result;
 }
 
-function getProductList($curlObject)
+function getProductList($apiSettings)
 {
-    $response = curlExec($curlObject);
+    $curl = setupCurl($apiSettings);
+
+    $curl = setCurlRequest(
+        $curl,
+        $apiSettings[MOYSKLAD_API_URL] . $apiSettings[MOYSKLAD_GET_NOMENCLATURE],
+        MOYSKLAD_GET_NOMENCLATURE_METHOD
+    );
+
+    $response = curlExec($curl);
     $data = json_decode($response, true);
     $result = $data['rows'];
     return $result;
 }
 
-function setCurlRequest(&$curlObject, $uri, $method)
+function setCurlRequest(&$curl, $uri, $method)
 {
-    curl_setopt($curlObject, CURLOPT_URL, $uri);
+    curl_setopt($curl, CURLOPT_URL, $uri);
 
-    curl_setopt($curlObject, CURLOPT_HTTPGET, true);
+    curl_setopt($curl, CURLOPT_HTTPGET, true);
     switch ($method) {
         case MOYSKLAD_METHOD_GET:
             break;
         case MOYSKLAD_METHOD_POST:
-            curl_setopt($curlObject, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_POST, true);
             break;
         case MOYSKLAD_METHOD_PUT:
-            curl_setopt($curlObject, CURLOPT_PUT, true);
+            curl_setopt($curl, CURLOPT_PUT, true);
             break;
     }
 
-    return $curlObject;
+    return $curl;
 }
 
-function createCustomerOrder($curlObject)
+function createCustomerOrder($apiSettings, $orderPostData)
 {
-    $response = curlExec($curlObject);
+    $curl = setupCurl($apiSettings);
+
+    $curl = setCurlRequest(
+        $curl,
+        $apiSettings[MOYSKLAD_API_URL] . $apiSettings[MOYSKLAD_ADD_CUSTOMER_ORDER],
+        $apiSettings[MOYSKLAD_ADD_CUSTOMER_ORDER_METHOD]
+    );
+
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $orderPostData);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($orderPostData)
+        )
+    );
+
+
+    $response = curlExec($curl);
     $data = json_decode($response, true);
     $customerOrderId = $data['id'];
     return $customerOrderId;
 }
 
-function createCustomerOrderPosition($curlObject)
+function createCustomerOrderPosition($apiSettings, $customerOrderId, $orderPositionsPostData)
 {
-    $response = curlExec($curlObject);
+    $curl = setupCurl($apiSettings);
+
+    $curl = setCurlRequest(
+        $curl,
+        $apiSettings[MOYSKLAD_API_URL]
+            . $apiSettings[MOYSKLAD_ADD_ORDER_POSITION_PREFIX]
+            . $customerOrderId
+            . $apiSettings[MOYSKLAD_ADD_ORDER_POSITION_SUFFIX],
+        $apiSettings[MOYSKLAD_ADD_ORDER_POSITION_METHOD]
+    );
+
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $orderPositionsPostData);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($orderPositionsPostData)
+        )
+    );
+
+
+    $response = curlExec($curl);
     $data = json_decode($response, true);
     return $data;
 }

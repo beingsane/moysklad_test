@@ -13,29 +13,10 @@ error_reporting(E_ALL);
 include('moysklad_routine_library.php');
 
 $apiSettings = getApiSettings();
-$curl = setupCurl($apiSettings);
 
-$curl = setCurlRequest(
-    $curl,
-    $apiSettings[MOYSKLAD_API_URL] . $apiSettings[MOYSKLAD_GET_JURIDICAL_PERSON],
-    $apiSettings[MOYSKLAD_GET_JURIDICAL_PERSON_METHOD]
-);
-
-$personList = getJuridicalPersonList($curl);
-
-$curl = setCurlRequest(
-    $curl,
-    $apiSettings[MOYSKLAD_API_URL] . $apiSettings[MOYSKLAD_GET_COUNTERPARTY],
-    MOYSKLAD_GET_COUNTERPARTY_METHOD
-);
-$counterpartyList = getCounterpartyList($curl);
-
-$curl = setCurlRequest(
-    $curl,
-    $apiSettings[MOYSKLAD_API_URL] . $apiSettings[MOYSKLAD_GET_NOMENCLATURE],
-    MOYSKLAD_GET_NOMENCLATURE_METHOD
-);
-$productList = getProductList($curl);
+$personList = getJuridicalPersonList($apiSettings);
+$counterpartyList = getCounterpartyList($apiSettings);
+$productList = getProductList($apiSettings);
 ?>
 <html>
     <body>
