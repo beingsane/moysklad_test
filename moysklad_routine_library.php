@@ -1,6 +1,6 @@
 <?php
 
-function getSettings()
+function getApiSettings()
 {
     $apiConfig = include('moysklad_curl_details.php');
     return $apiConfig;
@@ -25,7 +25,7 @@ function setupCurl($apiSettings)
     return $curl;
 }
 
-function getJuridicalPerson($curlObject)
+function getJuridicalPersonList($curlObject)
 {
     $response = curlExec($curlObject);
     $data = json_decode($response, true);
@@ -45,7 +45,7 @@ function curlExec($curlObject)
     return $response;
 }
 
-function getCounterparty($curlObject)
+function getCounterpartyList($curlObject)
 {
     $response = curlExec($curlObject);
     $data = json_decode($response, true);
@@ -53,7 +53,7 @@ function getCounterparty($curlObject)
     return $result;
 }
 
-function getNomenclature($curlObject)
+function getProductList($curlObject)
 {
     $response = curlExec($curlObject);
     $data = json_decode($response, true);
@@ -61,7 +61,7 @@ function getNomenclature($curlObject)
     return $result;
 }
 
-function setCurl(&$curlObject, $uri, $method)
+function setCurlRequest(&$curlObject, $uri, $method)
 {
     curl_setopt($curlObject, CURLOPT_URL, $uri);
 
@@ -80,7 +80,7 @@ function setCurl(&$curlObject, $uri, $method)
     return $curlObject;
 }
 
-function setCustomerOrder($curlObject)
+function createCustomerOrder($curlObject)
 {
     $response = curlExec($curlObject);
     $data = json_decode($response, true);
@@ -88,7 +88,7 @@ function setCustomerOrder($curlObject)
     return $customerOrderId;
 }
 
-function setCustomerOrderPosition($curlObject)
+function createCustomerOrderPosition($curlObject)
 {
     $response = curlExec($curlObject);
     $data = json_decode($response, true);
