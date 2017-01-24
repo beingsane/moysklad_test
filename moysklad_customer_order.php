@@ -63,7 +63,9 @@ $nomenclature = getNomenclature($curl);
                     <label for="<?= htmlspecialchars($positionId) ?>">
                         <?= htmlspecialchars($position['name']) ?>, количество для заказа =>
                     </label>
-                    <input type="text" id="<?= htmlspecialchars($positionId) ?>" data-position-type="1"/>
+                    <input type="text" id="<?= htmlspecialchars($positionId) ?>" data-position-type="1"
+                        name="position[<?= htmlspecialchars($positionId) ?>]"
+                    />
                     <br />
                 <?php } ?>
 
@@ -78,9 +80,6 @@ $nomenclature = getNomenclature($curl);
                 var $text_field = $('#orderForm :input:text');
 
                 var position = {};
-                var counterparty = {};
-                var organization = {};
-
                 $text_field.each(function() {
                     var this_val = $(this).val();
                     var is_it_position = $(this).data('position-type');
@@ -92,22 +91,8 @@ $nomenclature = getNomenclature($curl);
                     }
                 });
 
-                var $radio_field = $('#orderForm :input:radio:checked');
-                $radio_field.each(function() {
-                    var this_val = $(this).val();
-
-                    var is_it_counterparty = $(this).data('counterparty-type');
-                    var is_it_organization = $(this).data('organization-type');
-
-                    var may_assign = (this_val > 0 || this_val != '');
-
-                    if (may_assign && is_it_counterparty > 0) {
-                        counterparty[this.id] = this_val;
-                    }
-                    if (may_assign && is_it_organization > 0) {
-                        organization[this.id] = this_val;
-                    }
-                });
+                var organization = $('#orderForm :input:radio:checked[name=organization]').attr('id');
+                var counterparty = $('#orderForm :input:radio:checked[name=counterparty]').attr('id');
 
                 var postData = JSON.stringify({position : position, counterparty : counterparty , organization : organization});
                 $.ajax({

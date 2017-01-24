@@ -9,15 +9,8 @@ $rawData = file_get_contents("php://input");
 $data = json_decode($rawData, true);
 
 $rawPosition = $data['position'];
-$rawCounterparty = $data['counterparty'];
-$rawOrganization = $data['organization'];
-
-$counterpartyIdCollection = array_keys($rawCounterparty);
-$organizationIdCollection = array_keys($rawOrganization);
-
-const FIRST_INDEX = 0;
-$counterpartyId = $counterpartyIdCollection[FIRST_INDEX];
-$organizationId = $organizationIdCollection[FIRST_INDEX];
+$counterpartyId = $data['counterparty'];
+$organizationId = $data['organization'];
 
 $textAddCustomerOrder = '
 {
