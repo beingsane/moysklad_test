@@ -34,10 +34,10 @@ $newCustomerOrder = [
     ],
 ];
 
-$apiSettings = getApiSettings();
+$apiClient = MoySkladApiClient::create();
 
 $orderPostData = json_encode($newCustomerOrder);
-$customerOrderId = createCustomerOrder($apiSettings, $orderPostData);
+$customerOrderId = $apiClient->createCustomerOrder($orderPostData);
 
 
 $orderPositions = array();
@@ -71,7 +71,7 @@ $jsonResponse = 'empty';
 $isContainPosition = (count($orderPositions) > 0);
 if ($isContainPosition) {
     $jsonOrderPositions = json_encode($orderPositions);
-    $jsonResponse = createCustomerOrderPosition($apiSettings, $customerOrderId, $jsonOrderPositions);
+    $jsonResponse = $apiClient->createCustomerOrderPosition($customerOrderId, $jsonOrderPositions);
 }
 
 var_export($jsonResponse);

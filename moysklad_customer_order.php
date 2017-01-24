@@ -12,11 +12,11 @@ error_reporting(E_ALL);
 
 include('moysklad_routine_library.php');
 
-$apiSettings = getApiSettings();
+$apiClient = MoySkladApiClient::create();
 
-$personList = getJuridicalPersonList($apiSettings);
-$counterpartyList = getCounterpartyList($apiSettings);
-$productList = getProductList($apiSettings);
+$personList = $apiClient->getJuridicalPersonList();
+$counterpartyList = $apiClient->getCounterpartyList();
+$productList = $apiClient->getProductList();
 ?>
 <html>
     <body>
