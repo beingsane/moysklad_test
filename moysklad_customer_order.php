@@ -12,58 +12,58 @@ error_reporting(E_ALL);
 
 include('moysklad_routine_library.php');
 
-$apiSettings = getSettings();
+$apiSettings = getApiSettings();
 $curl = setupCurl($apiSettings);
 
-$curl = setCurl(
+$curl = setCurlRequest(
     $curl,
     $apiSettings[MOYSKLAD_API_URL] . $apiSettings[MOYSKLAD_GET_JURIDICAL_PERSON],
     $apiSettings[MOYSKLAD_GET_JURIDICAL_PERSON_METHOD]
 );
 
-$persons = getJuridicalPerson($curl);
+$personList = getJuridicalPersonList($curl);
 
-$curl = setCurl(
+$curl = setCurlRequest(
     $curl,
     $apiSettings[MOYSKLAD_API_URL] . $apiSettings[MOYSKLAD_GET_COUNTERPARTY],
     MOYSKLAD_GET_COUNTERPARTY_METHOD
 );
-$counterparty = getCounterparty($curl);
+$counterpartyList = getCounterpartyList($curl);
 
-$curl = setCurl(
+$curl = setCurlRequest(
     $curl,
     $apiSettings[MOYSKLAD_API_URL] . $apiSettings[MOYSKLAD_GET_NOMENCLATURE],
     MOYSKLAD_GET_NOMENCLATURE_METHOD
 );
-$nomenclature = getNomenclature($curl);
+$productList = getProductList($curl);
 ?>
 <html>
     <body>
         <form action="#" onsubmit="return false;" id="orderForm">
             <p>
                 Доступные юридические лица:<br />
-                <?php foreach ($persons as $key => $person) { ?>
+                <?php foreach ($personList as $key => $person) { ?>
                     <?php $personId = $person['id']; ?>
                     <label for="<?= htmlspecialchars($personId) ?>"><?= htmlspecialchars($person['name']) ?></label>
-                    <input type="radio" value="<?= htmlspecialchars($personId) ?>" name="organization"/>
+                    <input type="radio" value="<?= htmlspecialchars($personId) ?>" name="organization_id"/>
                     <br />
                 <?php } ?>
 
                 Доступные контрагенты:<br />
-                <?php foreach ($counterparty as $key => $person) { ?>
+                <?php foreach ($counterpartyList as $key => $person) { ?>
                     <?php $personId = $person['id']; ?>
                     <label for="<?= htmlspecialchars($personId) ?>"><?= htmlspecialchars($person['name']) ?></label>
-                    <input type="radio" value="<?= htmlspecialchars($personId) ?>" name="counterparty"/>
+                    <input type="radio" value="<?= htmlspecialchars($personId) ?>" name="counterparty_id"/>
                     <br />
                 <?php } ?>
 
                 Номенклатура товаров:<br />
-                <?php foreach ($nomenclature as $key => $position) { ?>
+                <?php foreach ($productList as $key => $position) { ?>
                     <?php $positionId = $position['id']; ?>
                     <label for="<?= htmlspecialchars($positionId) ?>">
                         <?= htmlspecialchars($position['name']) ?>, количество для заказа =>
                     </label>
-                    <input type="text" name="position[<?= htmlspecialchars($positionId) ?>]"/>
+                    <input type="text" name="positions[<?= htmlspecialchars($positionId) ?>]"/>
                     <br />
                 <?php } ?>
 
