@@ -91,7 +91,7 @@ function sendOrder(){
     var postData = JSON.stringify({position : position, counterparty : counterparty , organization : organization});
     $.ajax({
         type: "POST",
-        url: "moyskald_add_order.php",        
+        url: "moysklad_add_order.php",        
         data: postData,
         contentType: "application/json; charset=utf-8",
         dataType: "text",
