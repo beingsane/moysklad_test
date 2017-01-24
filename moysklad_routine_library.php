@@ -5,6 +5,7 @@ function getSettings()
     $apiConfig = include('moysklad_curl_details.php');
     return $apiConfig;
 }
+
 /**
  * @param $apiSettings
  * @return resource
@@ -23,6 +24,7 @@ function setupCurl($apiSettings)
     curl_setopt($curl, CURLOPT_USERAGENT, $apiSettings[MOYSKLAD_USER_AGENT]);
     return $curl;
 }
+
 function getJuridicalPerson($curlObject)
 {
     $response = curlExec($curlObject);
@@ -33,7 +35,6 @@ function getJuridicalPerson($curlObject)
 
 function curlExec($curlObject)
 {
-
     $response = curl_exec($curlObject);
 
     $curlErrorNumber = curl_errno($curlObject);
@@ -78,6 +79,7 @@ function setCurl(&$curlObject, $uri, $method)
 
     return $curlObject;
 }
+
 function setCustomerOrder($curlObject)
 {
     $response = curlExec($curlObject);
@@ -85,6 +87,7 @@ function setCustomerOrder($curlObject)
     $customerOrderId = $data['id'];
     return $customerOrderId;
 }
+
 function setCustomerOrderPosition($curlObject)
 {
     $response = curlExec($curlObject);
