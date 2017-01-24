@@ -4,9 +4,7 @@ error_reporting(E_ALL);
 
 include('moysklad_routine_library.php');
 
-$rawData = file_get_contents("php://input");
-
-$data = json_decode($rawData, true);
+$data = $_POST;
 
 $rawPosition = $data['position'];
 $counterpartyId = $data['counterparty'];
@@ -56,6 +54,9 @@ if ($isPositionArray) {
     foreach ($rawPosition as $id => $quantity) {
 
         $positionQuantity = floatval($quantity);
+        if ($positionQuantity <= 0) {
+            continue;
+        }
 
         $orderPositions[] = [
             "quantity" => $positionQuantity,

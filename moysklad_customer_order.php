@@ -45,7 +45,7 @@ $nomenclature = getNomenclature($curl);
                 <?php foreach ($persons as $key => $person) { ?>
                     <?php $personId = $person['id']; ?>
                     <label for="<?= htmlspecialchars($personId) ?>"><?= htmlspecialchars($person['name']) ?></label>
-                    <input type="radio" data-organization-type="1" id="<?= htmlspecialchars($personId) ?>" name="organization"/>
+                    <input type="radio" value="<?= htmlspecialchars($personId) ?>" name="organization"/>
                     <br />
                 <?php } ?>
 
@@ -53,7 +53,7 @@ $nomenclature = getNomenclature($curl);
                 <?php foreach ($counterparty as $key => $person) { ?>
                     <?php $personId = $person['id']; ?>
                     <label for="<?= htmlspecialchars($personId) ?>"><?= htmlspecialchars($person['name']) ?></label>
-                    <input type="radio" data-counterparty-type="1" id="<?= htmlspecialchars($personId) ?>" name="counterparty"/>
+                    <input type="radio" value="<?= htmlspecialchars($personId) ?>" name="counterparty"/>
                     <br />
                 <?php } ?>
 
@@ -63,9 +63,7 @@ $nomenclature = getNomenclature($curl);
                     <label for="<?= htmlspecialchars($positionId) ?>">
                         <?= htmlspecialchars($position['name']) ?>, количество для заказа =>
                     </label>
-                    <input type="text" id="<?= htmlspecialchars($positionId) ?>" data-position-type="1"
-                        name="position[<?= htmlspecialchars($positionId) ?>]"
-                    />
+                    <input type="text" name="position[<?= htmlspecialchars($positionId) ?>]"/>
                     <br />
                 <?php } ?>
 
@@ -77,29 +75,12 @@ $nomenclature = getNomenclature($curl);
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
         <script type="text/javascript">
             function sendOrder() {
-                var $text_field = $('#orderForm :input:text');
 
-                var position = {};
-                $text_field.each(function() {
-                    var this_val = $(this).val();
-                    var is_it_position = $(this).data('position-type');
-
-                    var may_assign = (this_val > 0 || this_val != '');
-
-                    if (may_assign && is_it_position > 0){
-                        position[this.id] = this_val;
-                    }
-                });
-
-                var organization = $('#orderForm :input:radio:checked[name=organization]').attr('id');
-                var counterparty = $('#orderForm :input:radio:checked[name=counterparty]').attr('id');
-
-                var postData = JSON.stringify({position : position, counterparty : counterparty , organization : organization});
+                var postData = $('#orderForm').serialize();
                 $.ajax({
                     type: 'POST',
                     url: 'moysklad_add_order.php',
                     data: postData,
-                    contentType: 'application/json; charset=utf-8',
                     dataType: 'text',
                     timeout: 10000,
                     error: function() {
